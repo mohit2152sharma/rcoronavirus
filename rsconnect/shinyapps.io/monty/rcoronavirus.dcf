@@ -1,0 +1,12 @@
+name: rcoronavirus
+title: rcoronavirus
+username:
+account: monty
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1951991
+bundleId: 2885687
+url: https://monty.shinyapps.io/rcoronavirus/
+when: 1584342524.71934
+asMultiple: FALSE
+asStatic: FALSE

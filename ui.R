@@ -12,7 +12,7 @@ countries[length(countries)+1] = 'Global'
 ui <- dashboardPage(
   #---header----
   dashboardHeader(
-    title = 'CoronaVirus',
+    title = 'Covid19-Cases',
     dropdownMenu(
       type='notifications',
       icon=icon('question'),
@@ -24,7 +24,7 @@ ui <- dashboardPage(
       notificationItem(
         text='Project Readme',
         icon=icon('question'),
-        href='https://github.com/'
+        href='https://github.com/mohit2152sharma/rcoronavirus'
       )
     ),
       tags$li(
