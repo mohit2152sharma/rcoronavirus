@@ -26,7 +26,10 @@ add_global = function(df){
 
 
 state_data = function(url){
-  stateData = html_nodes(read_html(url),'.table-responsive')[2] %>% html_children() %>% html_table()
+  
+  nodes = html_nodes(read_html(url), '.table-responsive')
+  nodeLength = length(nodes)
+  stateData = nodes[nodeLength] %>% html_children() %>% html_table()
   stateData = as.data.frame(stateData)
   colnames(stateData) = c('s.no','state', 'confirmedCasesIndia', 'confirmedCasesForeign', 'recovered', 'deaths')
   stateData$totalConfirmedCases = as.numeric(stateData[,3]) + as.numeric(stateData[,4])
@@ -37,7 +40,7 @@ state_data = function(url){
 ##get update data for india data from url
 update_date = function(url){
   updateDate = read_html(url) %>% html_nodes('p') %>% html_text()
-  updateDate = str_extract(updateDate[which(str_detect(text, '\\.*including foreign nationals\\.*'))], '\\.*(\\d{2}.\\d{2}.\\d{4})\\.*')
+  updateDate = str_extract(updateDate[which(str_detect(updateDate, '.\\*including foreign nationals\\.*'))], '\\.*(\\d{2}.\\d{2}.\\d{4})\\.*')
   
   return(updateDate)
 }
@@ -60,4 +63,9 @@ combine_latlong = function(df){
   tempDf = left_join(latlong, df, by = c('States' = 'state'))
   return(tempDf)
 }
+
+
+
+
+
 

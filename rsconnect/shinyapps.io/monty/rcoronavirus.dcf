@@ -5,8 +5,8 @@ account: monty
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 1951991
-bundleId: 2909636
+bundleId: 2914546
 url: https://monty.shinyapps.io/rcoronavirus/
-when: 1584907087.48097
+when: 1584993160.26384
 asMultiple: FALSE
 asStatic: FALSE

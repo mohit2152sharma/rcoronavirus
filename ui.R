@@ -3,8 +3,7 @@ source('helper_functions.R')
 #source('get_data.R')
 source('data_wrangle.R')
 
-
-countries = sort(unique(confirmed$`Country/Region`), decreasing=TRUE)
+countries = sort(unique(confirmed$`Country/Region`), decreasing=FALSE)
 
 convertMenuItem <- function(mi,tabName) {
   mi$children[[1]]$attribs['data-toggle']="tab"
@@ -23,19 +22,8 @@ dashboardHeader = dashboardHeader(
       href='https://www.who.int/news-room/q-a-detail/q-a-coronaviruses'
     ),
     notificationItem(
-      text='Project Readme',
-      icon=icon('question'),
-      href='https://github.com/mohit2152sharma/rcoronavirus'
+      text=paste('Last Updated: ', dataUpdateTime, sep='')
     )
-  ),
-  tags$li(
-    a(
-      HTML("<img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi2.png?v=2' border='0' alt='Buy Me a Coffee at ko-fi.com' />"),
-      href="https://ko-fi.com/J3J61I856",
-      title='',
-      target='_blank'
-    ),
-    class='dropdown'
   )
 )
 
@@ -80,6 +68,26 @@ dashboardSideBar = dashboardSidebar(
         tabName='india'
       ),
       tabName='india'
+    ),
+    convertMenuItem(
+      menuItem(
+        text='Trajectory',
+        tabName='trajectory',
+        selectInput(
+          inputId='trajecotryCountry',
+          choices=countries,
+          selected='India',
+          label='Select Country'
+        )
+      ),
+      tabName='trajectory'
+    ),
+    convertMenuItem(
+      menuItem(
+        text='About',
+        tabName='about'
+      ),
+      tabName='about'
     )
   )
 )
@@ -140,7 +148,72 @@ dashboardBody = dashboardBody(
             'Map',
             leafletOutput('indiaMap')
           ),
+          tabPanel(
+            'News',
+            strong('This tab is under construction, new figures will be added soon'),
+            tags$li(
+            textOutput('indiaNewCases')
+            ),
+            tags$li(
+              textOutput('stateMaxJump')
+            )
+          ),
           width=12
+        )
+      )
+    ),
+    
+    #trajectory tab
+    tabItem(
+      tabName='trajectory',
+      fluidRow(
+        box(
+          title='Compare Trajectory of selected Country',
+          solidHeader = TRUE,
+          status='primary',
+          plotlyOutput('trajectory'),
+          width=12
+        )
+      )
+    ),
+    
+    #about tab
+    tabItem(
+      tabName='about',
+      fluidRow(
+        box(
+          title=strong('About',style='font-size:25px;'),
+          strong('Data', style='font-size:20px;'),
+          br(),
+          tags$li(
+            a('The data associated with countries (tab: country, compare and trajectory) is taken from Jhon Hopkins covid 19 github repo', href='https://github.com/CSSEGISandData/COVID-19', title='')
+          ),
+          tags$li(
+            a('The data under India tab is taken from Ministry of health and family welfare, Government of India', href='https://www.mohfw.gov.in/', title='')
+          ),
+          br(),
+          strong('Data Updae', style='font-size:20px;'),
+          tags$li(
+            'The data is updated daily at around 6 pm IST, including from both the data sources as listed above'
+          ),
+          br(),
+          strong('Support', style='font-size:20px;'),
+          tags$li(
+            a('If you find this site useful, consider donating, as it will allow me to move it to dedicated hosting service', href='https://paypal.me/mohit2013')
+          ),
+          tags$li(
+            a('Collborate on github', href='https://github.com/mohit2152sharma/rcoronavirus')
+          ),
+          tags$li(
+            'For suggestions: mohitsharma@alumni.iitm.ac.in'
+          ),
+          br(),
+          strong('Developed By', style='font-size:20px;'),
+          tags$li(
+            'Mohit'
+          ),
+          width=12,
+          style='font-size:20px;'
         )
       )
     )

@@ -1,5 +1,8 @@
 #data loading and wrangling
 
+#data update timestamp
+dataUpdateTime = read_lines('./data/dataUpdateTime.txt')
+
 #global data
 confirmed = read_csv('./data/confirmed.csv')
 deaths = read_csv('./data/deaths.csv')

@@ -29,3 +29,6 @@ add_date_data_india('./data/india/indiaTimeSeries/indiaDeaths.csv', stateData[, 
 
 stateData = combine_latlong(stateData)
 write_csv(stateData, paste('./data/india/indiaDailyReports/',updateDate,'.csv', sep=''))
+
+#record data update time
+write.table(paste(Sys.time(), 'IST', sep=' '), './data/dataUpdateTime.txt', row.names=F, col.names=F)
