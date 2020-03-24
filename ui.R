@@ -149,6 +149,10 @@ dashboardBody = dashboardBody(
             leafletOutput('indiaMap')
           ),
           tabPanel(
+            'Daily New Cases',
+            plotlyOutput('indiaDailyNewCases')
+          ),
+          tabPanel(
             'News',
             strong('This tab is under construction, new figures will be added soon'),
             tags$li(
@@ -192,7 +196,7 @@ dashboardBody = dashboardBody(
             a('The data under India tab is taken from Ministry of health and family welfare, Government of India', href='https://www.mohfw.gov.in/', title='')
           ),
           br(),
-          strong('Data Updae', style='font-size:20px;'),
+          strong('Data Update', style='font-size:20px;'),
           tags$li(
             'The data is updated daily at around 6 pm IST, including from both the data sources as listed above'
           ),
@@ -205,7 +209,7 @@ dashboardBody = dashboardBody(
             a('Collborate on github', href='https://github.com/mohit2152sharma/rcoronavirus')
           ),
           tags$li(
-            'For suggestions: mohitsharma@alumni.iitm.ac.in'
+            'For suggestions: mohitlakshya@gmail.com'
           ),
           br(),
           strong('Developed By', style='font-size:20px;'),

@@ -119,6 +119,7 @@ server <- function(input, output) {
   })
   
   #india tab
+  ##map
   output$indiaMap = renderLeaflet({
     
     df = indiaConfirmed[, c(1,2,3, ncol(indiaConfirmed))]
@@ -134,6 +135,7 @@ server <- function(input, output) {
     
   })
   
+  ##news
   todayCases = sum(indiaConfirmed[,ncol(indiaConfirmed)], na.rm=T)
   ydayCases = sum(indiaConfirmed[,ncol(indiaConfirmed)-1], na.rm=T)
   inc = round((todayCases-ydayCases)/ydayCases, 2)*100
@@ -149,6 +151,20 @@ server <- function(input, output) {
     paste('State with maximum new cases registered: ', stateMaxJump, ', with total ', maxJump, ' new cases', sep='')
   })
   
+  ##new cases
+  output$indiaDailyNewCases = renderPlotly({
+    df = indiaCombineConfirmed %>%  filter(cases > 0) %>% mutate(diff=cases - lag(cases))
+    
+    plot_ly(data=df,
+            x=~date,
+            y=~diff,
+            type='bar') %>%
+      layout(xaxis=list(title='Date'),
+             yaxis=list(title='No. of new cases'))
+  })
+  
+  
+  #trajectory tab
   output$trajectory = renderPlotly({
     southKorea = filter_country('Korea, South', confirmed) %>% filter(cases >100)
     southKorea$date = 1:nrow(southKorea)
@@ -159,29 +175,58 @@ server <- function(input, output) {
     us = filter_country('US', confirmed) %>% filter(cases > 100)
     us$date = 1:nrow(us)
     
-    dfCountry = filter_country(input$trajecotryCountry, confirmed) %>% filter(cases > 100)
-    dfCountry$date = 1:nrow(dfCountry)
     
-    fig = plot_ly(data =southKorea,
-            x=~date,
-            y=~cases,
-            name='South Korea') %>% 
-      add_lines() %>%
-      add_lines(data=italy,
-                y=~cases,
-                x=~date,
-                name='Italy') %>%
-      add_lines(data=us,
-                y=~cases,
-                x=~date,
-                name='USA') %>%
-      add_lines(data=dfCountry,
-                y=~cases,
-                x=~date,
-                name=input$trajecotryCountry) %>%
-      layout(xaxis = list(title='Days since 100th case'),
-             yaxis = list(title='log(cases)', type='log')
-             )
-    fig
+    if(input$trajecotryCountry != 'India'){
+    
+      dfCountry = filter_country(input$trajecotryCountry, confirmed) %>% filter(cases > 100)
+      dfCountry$date = 1:nrow(dfCountry)
+      
+      fig = plot_ly(data =southKorea,
+              x=~date,
+              y=~cases,
+              name='South Korea') %>% 
+        add_lines() %>%
+        add_lines(data=italy,
+                  y=~cases,
+                  x=~date,
+                  name='Italy') %>%
+        add_lines(data=us,
+                  y=~cases,
+                  x=~date,
+                  name='USA') %>%
+        add_lines(data=dfCountry,
+                  y=~cases,
+                  x=~date,
+                  name=input$trajecotryCountry) %>%
+        layout(xaxis = list(title='Days since 100th case'),
+               yaxis = list(title='log(cases)', type='log')
+               )
+      fig
+    }else{
+      dfCountry = indiaCombineConfirmed %>% filter(cases > 100)
+      dfCountry$date = 1:nrow(dfCountry)
+      
+      fig = plot_ly(data =southKorea,
+                    x=~date,
+                    y=~cases,
+                    name='South Korea') %>% 
+        add_lines() %>%
+        add_lines(data=italy,
+                  y=~cases,
+                  x=~date,
+                  name='Italy') %>%
+        add_lines(data=us,
+                  y=~cases,
+                  x=~date,
+                  name='USA') %>%
+        add_lines(data=dfCountry,
+                  y=~cases,
+                  x=~date,
+                  name='India') %>%
+        layout(xaxis = list(title='Days since 100th case'),
+               yaxis = list(title='log(cases)', type='log')
+        )
+      fig
+    }
   })
 }
