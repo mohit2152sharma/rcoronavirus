@@ -153,6 +153,10 @@ dashboardBody = dashboardBody(
             plotlyOutput('indiaDailyNewCases')
           ),
           tabPanel(
+            'States New Cases',
+            plotlyOutput('indiaStateHeatMap')
+          ),
+          tabPanel(
             'News',
             strong('This tab is under construction, new figures will be added soon'),
             tags$li(

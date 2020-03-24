@@ -13,7 +13,7 @@ filter_country = function(country,df){
 #add global as a country to overall dataframe
 add_global = function(df){
   addGlobal = df %>%
-    bind_rows(summarise_all(., list(~ifelse(is.numeric(.),sum(.),NA))))
+    bind_rows(summarise_all(., list(~ifelse(is.numeric(.),sum(., na.rm=T),NA))))
   
   addGlobal$`Country/Region`[nrow(addGlobal)] = 'Global'
   addGlobal$Lat[nrow(addGlobal)] = NA

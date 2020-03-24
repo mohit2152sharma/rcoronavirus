@@ -163,6 +163,21 @@ server <- function(input, output) {
              yaxis=list(title='No. of new cases'))
   })
   
+  ##stateheatmap
+  output$indiaStateHeatMap = renderPlotly({
+    
+    df = indiaConfirmed[-which(is.na(indiaConfirmed[,c(4:ncol(indiaConfirmed))])),] %>% pivot_longer(-c(States, Latitude, Longitude), names_to='date', values_to='cases')
+    
+    df$date = dmy(df$date)
+    
+    plot_ly(df,
+            x=~date,
+            y=~States,
+            z=~cases,
+            type='heatmap',
+            reversescale=T)
+  })
+  
   
   #trajectory tab
   output$trajectory = renderPlotly({
