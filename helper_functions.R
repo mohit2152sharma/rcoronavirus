@@ -23,8 +23,6 @@ add_global = function(df){
 }
 
 #extract india state data from url
-
-
 state_data = function(url){
   
   nodes = html_nodes(read_html(url), '.table-responsive')
@@ -64,8 +62,77 @@ combine_latlong = function(df){
   return(tempDf)
 }
 
+#combine jhu and mohfw data
+combine_jhu_mohfw_data = function(indiadf, df){
+  tempdf1 = filter_country('India', df)
+  tempdf1 = tempdf1[1:which(tempdf1$date == ymd('2020-03-21')), ]
+  indiadf = indiadf %>% mutate_at(vars(4:ncol(indiadf)), as.numeric)
+  tempdf = data.frame('date' = colnames(indiadf)[4:ncol(indiadf)],
+                      'cases' = colSums(indiadf[, -c(1:3)], na.rm=T),
+                      row.names = NULL)
+  tempdf$date = dmy(tempdf$date)
+  
+  tempdf1 = rbind.data.frame(tempdf1, tempdf)
+  
+  rm(tempdf)
+  
+  return(tempdf1)
+}
 
+#plotting functions
+plot_trendPlot = function(df_confirmed, df_deaths){
+  plot_ly(df_confirmed, 
+          x=~date, 
+          y=~cases, 
+          name='Confirmed Cases',
+          type='scatter', 
+          mode='lines+markers') %>%
+    # add_trace(y=~df_recovered$cases,
+    #           name='Recovered Cases',
+    #           mode='lines+markers',
+    #           line = list(color='green'),
+    #           marker=list(color='green')) %>%
+    add_trace(y=~df_deaths$cases,
+              name='Deaths',
+              mode='lines+markers',
+              line = list(color='red'),
+              marker = list(color='red'))
+}
 
+plot_valuebox_confirmed = function(df){
+  valueBox(
+    df$cases[nrow(df)],
+    subtitle='Total Confirmed Cases',
+    color='aqua'
+  )
+}
 
+plot_valuebox_recovered = function(df){
+  valueBox(
+    df$cases[nrow(df)],
+    subtitle='Total Recovered Cases',
+    color='green'
+  )
+}
 
+plot_valuebox_deaths = function(df){
+  valueBox(
+    df$cases[nrow(df)],
+    subtitle='Total Deaths',
+    color='red'
+  )
+}
 
+plot_compare = function(dfA, countryA, dfB, countryB){
+  plot_ly(dfA,
+          x=~date,
+          y=~cases,
+          name=countryA,
+          type='scatter',
+          mode='lines+markers') %>%
+    add_trace(data=dfB,
+              x=~date,
+              y=~cases,
+              name=countryB,
+              mode='lines+markers')
+}

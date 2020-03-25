@@ -110,7 +110,7 @@ dashboardBody = dashboardBody(
       ),
       fluidRow(
         valueBoxOutput("confirmedTotal"),
-        valueBoxOutput("recoveredTotal"),
+        #valueBoxOutput("recoveredTotal"),
         valueBoxOutput("deathsTotal")
       )
     ),
@@ -125,10 +125,10 @@ dashboardBody = dashboardBody(
             'Confirmed Cases',
             plotlyOutput('comparePlotNoCases')
           ),
-          tabPanel(
-            'Recovered Cases',
-            plotlyOutput('compareRecovered')
-          ),
+          # tabPanel(
+          #   'Recovered Cases',
+          #   plotlyOutput('compareRecovered')
+          # ),
           tabPanel(
             'Deaths',
             plotlyOutput('compareDeaths')
@@ -156,16 +156,16 @@ dashboardBody = dashboardBody(
             'States New Cases',
             plotlyOutput('indiaStateHeatMap')
           ),
-          tabPanel(
-            'News',
-            strong('This tab is under construction, new figures will be added soon'),
-            tags$li(
-            textOutput('indiaNewCases')
-            ),
-            tags$li(
-              textOutput('stateMaxJump')
-            )
-          ),
+          # tabPanel(
+          #   'News',
+          #   strong('This tab is under construction, new figures will be added soon'),
+          #   tags$li(
+          #   textOutput('indiaNewCases')
+          #   ),
+          #   tags$li(
+          #     textOutput('stateMaxJump')
+          #   )
+          # ),
           width=12
         )
       )
@@ -210,10 +210,10 @@ dashboardBody = dashboardBody(
             a('If you find this site useful, consider donating, as it will allow me to move it to dedicated hosting service', href='https://paypal.me/mohit2013')
           ),
           tags$li(
-            a('Collborate on github', href='https://github.com/mohit2152sharma/rcoronavirus')
+            a('Project on github', href='https://github.com/mohit2152sharma/rcoronavirus')
           ),
           tags$li(
-            'For suggestions: mohitlakshya@gmail.com'
+            'For suggestions and collaboration: mohitlakshya@gmail.com'
           ),
           br(),
           strong('Developed By', style='font-size:20px;'),

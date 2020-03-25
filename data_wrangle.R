@@ -14,17 +14,10 @@ recovered = add_global(recovered)
 
 #india data
 indiaConfirmed = read_csv('./data/india/indiaTimeSeries/indiaConfirmed.csv')
+indiaRecovered = read_csv('./data/india/indiaTimeSeries/indiaRecovered.csv')
+indiaDeaths = read_csv('./data/india/indiaTimeSeries/indiaDeaths.csv')
 
 #combining data from jhu and mohfw
-indiaCombineConfirmed = filter_country('India', confirmed)
-
-indiaCombineConfirmed = indiaCombineConfirmed[1:which(indiaCombineConfirmed$date == ymd('2020-03-21')), ]
-
-tempdf  = data.frame('date' = colnames(indiaConfirmed)[4:ncol(indiaConfirmed)],
-                        'cases' = colSums(indiaConfirmed[,-c(1:3)], na.rm=T),
-                        row.names = NULL)
-tempdf$date = dmy(tempdf$date)
-
-indiaCombineConfirmed = rbind.data.frame(indiaCombineConfirmed, tempdf)
-
-rm(tempdf)
+indiaCombineConfirmed = combine_jhu_mohfw_data(indiaConfirmed, confirmed)
+indiaCombineRecovered = combine_jhu_mohfw_data(indiaRecovered, recovered)
+indiaCombineDeaths = combine_jhu_mohfw_data(indiaDeaths, deaths)

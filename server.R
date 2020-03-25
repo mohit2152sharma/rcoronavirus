@@ -5,118 +5,120 @@ server <- function(input, output) {
   #countryTab
   output$trendPlot = renderPlotly({
     
-    df_confirmed = filter_country(input$country, confirmed)
-    df_recovered = filter_country(input$country, recovered)
-    df_deaths = filter_country(input$country, deaths)
-    
-    plot_ly(df_confirmed, 
-            x=~date, 
-            y=~cases, 
-            name='Confirmed Cases',
-            type='scatter', 
-            mode='lines+markers') %>%
-      add_trace(y=~df_recovered$cases,
-                name='Recovered Cases',
-                mode='lines+markers',
-                line = list(color='green'),
-                marker=list(color='green')) %>%
-      add_trace(y=~df_deaths$cases,
-                name='Deaths',
-                mode='lines+markers',
-                line = list(color='red'),
-                marker = list(color='red'))
+    if(input$country != 'India'){
+      
+      plot_trendPlot(df_confirmed = filter_country(input$country, confirmed), 
+                     #df_recovered = filter_country(input$country, recovered), 
+                     df_deaths = filter_country(input$country, deaths))
+      
+    }else{
+      plot_trendPlot(df_confirmed = indiaCombineConfirmed,
+                     #df_recovered = indiaCombineRecovered,
+                     df_deaths = indiaCombineDeaths)
+    }
 
   })
   
   ##total number of confirmed cases
   output$confirmedTotal = renderValueBox({
     
-    df = filter_country(input$country, confirmed)
-    valueBox(
-      df$cases[nrow(df)],
-      subtitle='Total Confirmed Cases',
-      color='aqua'
-    )
+    if(input$country != 'India'){
+      plot_valuebox_confirmed(df=filter_country(input$country, confirmed))
+    }else{
+      plot_valuebox_confirmed(df=indiaCombineConfirmed)
+    }
     
   })
   
   ##total recovered cases
-  output$recoveredTotal = renderValueBox({
-    
-    df = filter_country(input$country, recovered)
-    valueBox(
-      df$cases[nrow(df)],
-      subtitle='Total Recovered Cases',
-      color='green'
-    )
-    
-  })
+  # output$recoveredTotal = renderValueBox({
+  #   if(input$country!= 'India'){
+  #     plot_valuebox_recovered(df = filter_country(input$country, recovered))
+  #   }else{
+  #     plot_valuebox_recovered(df=indiaCombineRecovered)
+  #   }
+  # })
   
   ##total deaths
   output$deathsTotal = renderValueBox({
     
-    df = filter_country(input$country, deaths)
-    valueBox(
-      df$cases[nrow(df)],
-      subtitle='Total Deaths',
-      color='red'
-    )
-
+    if(input$country != 'India'){
+      plot_valuebox_deaths(df = filter_country(input$country, deaths))
+    }else{
+      plot_valuebox_deaths(df = indiaCombineDeaths)
+    }
   })
   
   #compareTab
   ##compareTab total number of cases
   output$comparePlotNoCases = renderPlotly({
+ 
+    if(input$compareCountryA == 'India' && input$compareCountryB != 'India'){
+      dfA = indiaCombineConfirmed
+      dfB = filter_country(input$compareCountryB, confirmed)
+    }else if(input$compareCountryA != 'India' && input$compareCountryB == 'India' ){
+      dfB = indiaCombineConfirmed
+      dfA = filter_country(input$compareCountryA, confirmed)
+    }else if(input$compareCountryA == 'India' && input$compareCountryB == 'India'){
+      dfA = indiaCombineConfirmed
+      dfB = indiaCombineConfirmed
+    }else{
+      dfA = filter_country(input$compareCountryA, confirmed)
+      dfB = filter_country(input$compareCountryB, confirmed)
+    }
     
-    dfConfirmedA = filter_country(input$compareCountryA, confirmed)
-    dfConfirmedB = filter_country(input$compareCountryB, confirmed)
+    plot_compare(dfA = dfA, 
+                 countryA=input$compareCountryA, 
+                 dfB = dfB,
+                 countryB = input$compareCountryB)
     
-    
-    plot_ly(dfConfirmedA,
-            x=~date,
-            y=~cases,
-            name=input$compareCountryA,
-            type='scatter',
-            mode='lines+markers') %>%
-      add_trace(y=~dfConfirmedB$cases,
-                name=input$compareCountryB,
-                mode='lines+markers')
-      
   })
   
   ##compareTab total number of deaths
   output$compareDeaths = renderPlotly({
     
-    dfDeathsA = filter_country(input$compareCountryA, deaths)
-    dfDeathsB = filter_country(input$compareCountryB, deaths)
+    if(input$compareCountryA == 'India' && input$compareCountryB != 'India'){
+      dfA = indiaCombineDeaths
+      dfB = filter_country(input$compareCountryB, deaths)
+    }else if(input$compareCountryA != 'India' && input$compareCountryB == 'India' ){
+      dfB = indiaCombineDeaths
+      dfA = filter_country(input$compareCountryA, deaths)
+    }else if(input$compareCountryA == 'India' && input$compareCountryB == 'India'){
+      dfA = indiaCombineDeaths
+      dfB = indiaCombineDeaths
+    }else{
+      dfA = filter_country(input$compareCountryA, deaths)
+      dfB = filter_country(input$compareCountryB, deaths)
+    }
     
-    plot_ly(dfDeathsA,
-            x=~date,
-            y=~cases,
-            name=~input$compareCountryA,
-            type='scatter',
-            mode='lines+markers') %>%
-      add_trace(y=~dfDeathsB$cases,
-                name=input$compareCountryB,
-                mode='lines+markers')
+    plot_compare(dfA = dfA, 
+                 countryA=input$compareCountryA, 
+                 dfB = dfB,
+                 countryB = input$compareCountryB)
   })
   
   ##compareTab total recovered
-  output$compareRecovered = renderPlotly({
-    
-    dfRecoveredA = filter_country(input$compareCountryA, recovered)
-    dfRecoveredB = filter_country(input$compareCountryB, recovered)
-    
-    plot_ly(dfRecoveredA,
-            x=~date,
-            y=~cases,
-            name=~input$compareCountryA,
-            type='scatter',
-            mode='lines+markers') %>%
-      add_trace(y=~dfRecoveredB$cases,
-                name=input$compareCountryB,
-                mode='lines+markers')
-  })
+  # output$compareRecovered = renderPlotly({
+  #   
+  #   if(input$compareCountryA == 'India' && input$compareCountryB != 'India'){
+  #     dfA = indiaCombineRecovered
+  #     dfB = filter_country(input$compareCountryB, recovered)
+  #   }else if(input$compareCountryA != 'India' && input$compareCountryB == 'India' ){
+  #     dfB = indiaCombineRecovered
+  #     dfA = filter_country(input$compareCountryA, recovered)
+  #   }else if(input$compareCountryA == 'India' && input$compareCountryB == 'India'){
+  #     dfA = indiaCombineRecovered
+  #     dfB = indiaCombineRecovered
+  #   }else{
+  #     dfA = filter_country(input$compareCountryA, recovered)
+  #     dfB = filter_country(input$compareCountryB, recovered)
+  #   }
+  #   
+  #   plot_compare(dfA = dfA, 
+  #                countryA=input$compareCountryA, 
+  #                dfB = dfB,
+  #                countryB = input$compareCountryB)
+  # })
   
   #india tab
   ##map
@@ -135,22 +137,22 @@ server <- function(input, output) {
     
   })
   
-  ##news
-  todayCases = sum(indiaConfirmed[,ncol(indiaConfirmed)], na.rm=T)
-  ydayCases = sum(indiaConfirmed[,ncol(indiaConfirmed)-1], na.rm=T)
-  inc = round((todayCases-ydayCases)/ydayCases, 2)*100
-  
-  maxJump = max(indiaConfirmed[, ncol(indiaConfirmed)] - indiaConfirmed[,ncol(indiaConfirmed)-1], na.rm=T)
-  stateMaxJump = indiaConfirmed$States[which(indiaConfirmed[,ncol(indiaConfirmed)] == indiaConfirmed[,ncol(indiaConfirmed)-1] + maxJump)]
-  
-  output$indiaNewCases = renderText({
-    paste('Cases in India increased by ', inc, ' % since yesterday', sep='')
-  })
-  
-  output$stateMaxJump = renderText({
-    paste('State with maximum new cases registered: ', stateMaxJump, ', with total ', maxJump, ' new cases', sep='')
-  })
-  
+  # ##news
+  # todayCases = sum(indiaConfirmed[,ncol(indiaConfirmed)], na.rm=T)
+  # ydayCases = sum(indiaConfirmed[,ncol(indiaConfirmed)-1], na.rm=T)
+  # inc = round((todayCases-ydayCases)/ydayCases, 2)*100
+  # 
+  # maxJump = max(indiaConfirmed[, ncol(indiaConfirmed)] - indiaConfirmed[,ncol(indiaConfirmed)-1], na.rm=T)
+  # stateMaxJump = indiaConfirmed$States[which(indiaConfirmed[,ncol(indiaConfirmed)] == indiaConfirmed[,ncol(indiaConfirmed)-1] + maxJump)]
+  # 
+  # output$indiaNewCases = renderText({
+  #   paste('Cases in India increased by ', inc, ' % since yesterday', sep='')
+  # })
+  # 
+  # output$stateMaxJump = renderText({
+  #   paste('State with maximum new cases registered: ', stateMaxJump, ', with total ', maxJump, ' new cases', sep='')
+  # })
+  # 
   ##new cases
   output$indiaDailyNewCases = renderPlotly({
     df = indiaCombineConfirmed %>%  filter(cases > 0) %>% mutate(diff=cases - lag(cases))
@@ -166,16 +168,17 @@ server <- function(input, output) {
   ##stateheatmap
   output$indiaStateHeatMap = renderPlotly({
     
-    df = indiaConfirmed[-which(is.na(indiaConfirmed[,c(4:ncol(indiaConfirmed))])),] %>% pivot_longer(-c(States, Latitude, Longitude), names_to='date', values_to='cases')
+    df = indiaConfirmed %>% 
+      pivot_longer(-c(States, Latitude, Longitude), names_to='date', values_to='cases')
     
     df$date = dmy(df$date)
+    df[is.na(df$cases), 'cases'] = 0
     
-    plot_ly(df,
-            x=~date,
-            y=~States,
-            z=~cases,
-            type='heatmap',
-            reversescale=T)
+    gg = ggplot(df, aes(x=date, y=States)) +
+      geom_tile(aes(fill=cases), color='grey') +
+      scale_fill_gradient(low='white', high='red')
+    ggplotly(gg)
+    
   })
   
   
