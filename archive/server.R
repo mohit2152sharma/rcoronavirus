@@ -1,3 +1,4 @@
+library(plotly)
 
 server <- function(input, output) {
   
@@ -28,6 +29,15 @@ server <- function(input, output) {
     }
     
   })
+  
+  ##total recovered cases
+  # output$recoveredTotal = renderValueBox({
+  #   if(input$country!= 'India'){
+  #     plot_valuebox_recovered(df = filter_country(input$country, recovered))
+  #   }else{
+  #     plot_valuebox_recovered(df=indiaCombineRecovered)
+  #   }
+  # })
   
   ##total deaths
   output$deathsTotal = renderValueBox({
@@ -87,6 +97,28 @@ server <- function(input, output) {
                  countryB = input$compareCountryB)
   })
   
+  ##compareTab total recovered
+  # output$compareRecovered = renderPlotly({
+  #   
+  #   if(input$compareCountryA == 'India' && input$compareCountryB != 'India'){
+  #     dfA = indiaCombineRecovered
+  #     dfB = filter_country(input$compareCountryB, recovered)
+  #   }else if(input$compareCountryA != 'India' && input$compareCountryB == 'India' ){
+  #     dfB = indiaCombineRecovered
+  #     dfA = filter_country(input$compareCountryA, recovered)
+  #   }else if(input$compareCountryA == 'India' && input$compareCountryB == 'India'){
+  #     dfA = indiaCombineRecovered
+  #     dfB = indiaCombineRecovered
+  #   }else{
+  #     dfA = filter_country(input$compareCountryA, recovered)
+  #     dfB = filter_country(input$compareCountryB, recovered)
+  #   }
+  #   
+  #   plot_compare(dfA = dfA, 
+  #                countryA=input$compareCountryA, 
+  #                dfB = dfB,
+  #                countryB = input$compareCountryB)
+  # })
   
   #india tab
   ##map
@@ -105,6 +137,22 @@ server <- function(input, output) {
     
   })
   
+  # ##news
+  # todayCases = sum(indiaConfirmed[,ncol(indiaConfirmed)], na.rm=T)
+  # ydayCases = sum(indiaConfirmed[,ncol(indiaConfirmed)-1], na.rm=T)
+  # inc = round((todayCases-ydayCases)/ydayCases, 2)*100
+  # 
+  # maxJump = max(indiaConfirmed[, ncol(indiaConfirmed)] - indiaConfirmed[,ncol(indiaConfirmed)-1], na.rm=T)
+  # stateMaxJump = indiaConfirmed$States[which(indiaConfirmed[,ncol(indiaConfirmed)] == indiaConfirmed[,ncol(indiaConfirmed)-1] + maxJump)]
+  # 
+  # output$indiaNewCases = renderText({
+  #   paste('Cases in India increased by ', inc, ' % since yesterday', sep='')
+  # })
+  # 
+  # output$stateMaxJump = renderText({
+  #   paste('State with maximum new cases registered: ', stateMaxJump, ', with total ', maxJump, ' new cases', sep='')
+  # })
+  # 
   ##new cases
   output$indiaDailyNewCases = renderPlotly({
     df = indiaCombineConfirmed %>%  filter(cases > 0) %>% mutate(diff=cases - lag(cases))
@@ -142,11 +190,8 @@ server <- function(input, output) {
     
     
     if(input$trajecotryCountry != 'India'){
-      
+    
       dfCountry = traj_df(input$trajecotryCountry, confirmed)
-      validate(
-        need(nrow(dfCountry) >0, 'Please select other country this country has not crossed 100 cases yet')
-      )
       
       plot_trajectory(dfSelected=dfCountry,
                       countryName=input$trajecotryCountry,

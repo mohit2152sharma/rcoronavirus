@@ -112,6 +112,7 @@ dashboardBody = dashboardBody(
       ),
       fluidRow(
         valueBoxOutput("confirmedTotal"),
+        #valueBoxOutput("recoveredTotal"),
         valueBoxOutput("deathsTotal")
       )
     ),
@@ -126,6 +127,10 @@ dashboardBody = dashboardBody(
             'Confirmed Cases',
             plotlyOutput('comparePlotNoCases')
           ),
+          # tabPanel(
+          #   'Recovered Cases',
+          #   plotlyOutput('compareRecovered')
+          # ),
           tabPanel(
             'Deaths',
             plotlyOutput('compareDeaths')
@@ -153,6 +158,16 @@ dashboardBody = dashboardBody(
             'States New Cases',
             plotlyOutput('indiaStateHeatMap')
           ),
+          # tabPanel(
+          #   'News',
+          #   strong('This tab is under construction, new figures will be added soon'),
+          #   tags$li(
+          #   textOutput('indiaNewCases')
+          #   ),
+          #   tags$li(
+          #     textOutput('stateMaxJump')
+          #   )
+          # ),
           width=12
         )
       )
