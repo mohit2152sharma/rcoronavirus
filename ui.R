@@ -23,8 +23,12 @@ dashboardHeader = dashboardHeader(
     ),
     notificationItem(
       text=paste('Last Updated: ', dataUpdateTime, sep='')
+      )
+    ),
+    tags$li(
+      tags$div(HTML("<script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support Me on Ko-fi', '#29abe0', 'J3J61I856');kofiwidget2.draw();</script> ")),
+      class='dropdown'
     )
-  )
 )
 
 dashboardSideBar = dashboardSidebar(
@@ -78,6 +82,12 @@ dashboardSideBar = dashboardSidebar(
           choices=countries,
           selected='India',
           label='Select Country'
+        ),
+        selectInput(
+          inputId='NoOfDays',
+          choices = c(100, 200, 500, 1000),
+          selected = 100,
+          label='Select Number of Days'
         )
       ),
       tabName='trajectory'
@@ -95,7 +105,6 @@ dashboardSideBar = dashboardSidebar(
 dashboardBody = dashboardBody(
   
   tags$head(includeHTML('google-analytics.html')),
-  
   tabItems(
     
     #country tab
@@ -197,10 +206,7 @@ dashboardBody = dashboardBody(
             'The data is updated daily at around 6 pm IST, including from both the data sources as listed above'
           ),
           br(),
-          strong('Support', style='font-size:20px;'),
-          tags$li(
-            a('If you find this site useful, consider donating, as it will allow me to move it to dedicated hosting service', href='https://paypal.me/mohit2013')
-          ),
+          strong('Collaborate', style='font-size:20px;'),
           tags$li(
             a('Project on github', href='https://github.com/mohit2152sharma/rcoronavirus')
           ),

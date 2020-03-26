@@ -141,8 +141,8 @@ plot_compare = function(dfA, countryA, dfB, countryB){
               mode='lines+markers')
 }
 
-traj_df = function(countryName, dfType){
-  df = filter_country(countryName, dfType) %>% filter(cases>100)
+traj_df = function(countryName, dfType, nDays){
+  df = filter_country(countryName, dfType) %>% filter(cases>nDays)
   if(nrow(df)==0){
     return(df)
   }else{

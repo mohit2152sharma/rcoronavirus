@@ -167,16 +167,17 @@ server <- function(input, output) {
   #trajectory tab
   output$trajectory = renderPlotly({
     
-    southKorea = traj_df('Korea, South', confirmed)
-    italy = traj_df('Italy', confirmed)
-    us = traj_df('US', confirmed)
+    nDays = as.numeric(input$NoOfDays)
+    southKorea = traj_df('Korea, South', confirmed, nDays)
+    italy = traj_df('Italy', confirmed, nDays)
+    us = traj_df('US', confirmed, nDays)
     
     
     if(input$trajecotryCountry != 'India'){
       
-      dfCountry = traj_df(input$trajecotryCountry, confirmed)
+      dfCountry = traj_df(input$trajecotryCountry, confirmed, nDays)
       validate(
-        need(nrow(dfCountry) >0, 'Please select other country this country has not crossed 100 cases yet')
+        need(nrow(dfCountry) >0, paste('Please select other country this country has not crossed, ', as.character(nDays), ' cases yet', sep=''))
       )
       
       plot_trajectory(dfSelected=dfCountry,
@@ -185,7 +186,11 @@ server <- function(input, output) {
                       italy=italy,
                       us=us)
     }else{
-      dfCountry = indiaCombineConfirmed %>% filter(cases > 100)
+      dfCountry = indiaCombineConfirmed %>% filter(cases > nDays)
+      validate(
+        need(nrow(dfCountry) >0, paste('Please select other country this country has not crossed, ', nDays, ' cases yet', sep=''))
+      )
+      
       dfCountry$date = 1:nrow(dfCountry)
       
       plot_trajectory(dfSelected=dfCountry,
