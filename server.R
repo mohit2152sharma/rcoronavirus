@@ -7,12 +7,12 @@ server <- function(input, output) {
     if(input$country != 'India'){
       
       plot_trendPlot(df_confirmed = filter_country(input$country, confirmed), 
-                     #df_recovered = filter_country(input$country, recovered), 
+                     df_recovered = filter_country(input$country, recovered), 
                      df_deaths = filter_country(input$country, deaths))
       
     }else{
       plot_trendPlot(df_confirmed = indiaCombineConfirmed,
-                     #df_recovered = indiaCombineRecovered,
+                     df_recovered = indiaCombineRecovered,
                      df_deaths = indiaCombineDeaths)
     }
 
@@ -27,6 +27,15 @@ server <- function(input, output) {
       plot_valuebox_confirmed(df=indiaCombineConfirmed)
     }
     
+  })
+  
+  ##total recovered cases
+  output$recoveredTotal = renderValueBox({
+    if(input$country!= 'India'){
+      plot_valuebox_recovered(df = filter_country(input$country, recovered))
+    }else{
+      plot_valuebox_recovered(df=indiaCombineRecovered)
+    }
   })
   
   ##total deaths
@@ -87,6 +96,28 @@ server <- function(input, output) {
                  countryB = input$compareCountryB)
   })
   
+  ##compareTab total recovered
+  output$compareRecovered = renderPlotly({
+
+    if(input$compareCountryA == 'India' && input$compareCountryB != 'India'){
+      dfA = indiaCombineRecovered
+      dfB = filter_country(input$compareCountryB, recovered)
+    }else if(input$compareCountryA != 'India' && input$compareCountryB == 'India' ){
+      dfB = indiaCombineRecovered
+      dfA = filter_country(input$compareCountryA, recovered)
+    }else if(input$compareCountryA == 'India' && input$compareCountryB == 'India'){
+      dfA = indiaCombineRecovered
+      dfB = indiaCombineRecovered
+    }else{
+      dfA = filter_country(input$compareCountryA, recovered)
+      dfB = filter_country(input$compareCountryB, recovered)
+    }
+
+    plot_compare(dfA = dfA,
+                 countryA=input$compareCountryA,
+                 dfB = dfB,
+                 countryB = input$compareCountryB)
+  })
   
   #india tab
   ##map

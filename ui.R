@@ -112,6 +112,7 @@ dashboardBody = dashboardBody(
       ),
       fluidRow(
         valueBoxOutput("confirmedTotal"),
+        valueBoxOutput("recoveredTotal"),
         valueBoxOutput("deathsTotal")
       )
     ),
@@ -125,6 +126,10 @@ dashboardBody = dashboardBody(
           tabPanel(
             'Confirmed Cases',
             plotlyOutput('comparePlotNoCases')
+          ),
+          tabPanel(
+            'Recovered Cases',
+            plotlyOutput('compareRecovered')
           ),
           tabPanel(
             'Deaths',

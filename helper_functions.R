@@ -80,19 +80,23 @@ combine_jhu_mohfw_data = function(indiadf, df){
 }
 
 #plotting functions
-plot_trendPlot = function(df_confirmed, df_deaths){
+plot_trendPlot = function(df_confirmed, df_recovered, df_deaths){
   plot_ly(df_confirmed, 
           x=~date, 
           y=~cases, 
           name='Confirmed Cases',
           type='scatter', 
           mode='lines+markers') %>%
-    # add_trace(y=~df_recovered$cases,
-    #           name='Recovered Cases',
-    #           mode='lines+markers',
-    #           line = list(color='green'),
-    #           marker=list(color='green')) %>%
-    add_trace(y=~df_deaths$cases,
+    add_trace(data=df_recovered,
+              x=~date,
+              y=~cases,
+              name='Recovered Cases',
+              mode='lines+markers',
+              line = list(color='green'),
+              marker=list(color='green')) %>%
+    add_trace(data=df_deaths,
+              x=~date,
+              y=~cases,
               name='Deaths',
               mode='lines+markers',
               line = list(color='red'),
