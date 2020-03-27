@@ -167,28 +167,29 @@ server <- function(input, output) {
   #trajectory tab
   output$trajectory = renderPlotly({
     
-    nDays = as.numeric(input$NoOfDays)
-    southKorea = traj_df('Korea, South', confirmed, nDays)
-    italy = traj_df('Italy', confirmed, nDays)
-    us = traj_df('US', confirmed, nDays)
+    nCases = as.numeric(input$NoOfCases)
+    southKorea = traj_df('Korea, South', confirmed, nCases)
+    italy = traj_df('Italy', confirmed, nCases)
+    us = traj_df('US', confirmed, nCases)
     
     
     if(input$trajecotryCountry != 'India'){
       
-      dfCountry = traj_df(input$trajecotryCountry, confirmed, nDays)
+      dfCountry = traj_df(input$trajecotryCountry, confirmed, nCases)
       validate(
-        need(nrow(dfCountry) >0, paste('Please select other country this country has not crossed, ', as.character(nDays), ' cases yet', sep=''))
+        need(nrow(dfCountry) >0, paste('Please select other country this country has not crossed, ', as.character(nCases), ' cases yet', sep=''))
       )
       
       plot_trajectory(dfSelected=dfCountry,
                       countryName=input$trajecotryCountry,
                       southKorea=southKorea,
                       italy=italy,
-                      us=us)
+                      us=us,
+                      nCases=nCases)
     }else{
-      dfCountry = indiaCombineConfirmed %>% filter(cases > nDays)
+      dfCountry = indiaCombineConfirmed %>% filter(cases > nCases)
       validate(
-        need(nrow(dfCountry) >0, paste('Please select other country this country has not crossed, ', nDays, ' cases yet', sep=''))
+        need(nrow(dfCountry) >0, paste('Please select other country this country has not crossed, ', as.character(nCases), ' cases yet', sep=''))
       )
       
       dfCountry$date = 1:nrow(dfCountry)
@@ -197,7 +198,8 @@ server <- function(input, output) {
                       countryName='India',
                       southKorea=southKorea,
                       italy=italy,
-                      us=us)
+                      us=us,
+                      nCases=nCases)
     }
   })
 }

@@ -141,8 +141,8 @@ plot_compare = function(dfA, countryA, dfB, countryB){
               mode='lines+markers')
 }
 
-traj_df = function(countryName, dfType, nDays){
-  df = filter_country(countryName, dfType) %>% filter(cases>nDays)
+traj_df = function(countryName, dfType, nCases){
+  df = filter_country(countryName, dfType) %>% filter(cases>nCases)
   if(nrow(df)==0){
     return(df)
   }else{
@@ -151,7 +151,7 @@ traj_df = function(countryName, dfType, nDays){
   }
 }
 
-plot_trajectory = function(dfSelected, countryName, southKorea, italy, us){
+plot_trajectory = function(dfSelected, countryName, southKorea, italy, us, nCases){
   plot_ly(data =southKorea,
           x=~date,
           y=~cases,
@@ -169,7 +169,7 @@ plot_trajectory = function(dfSelected, countryName, southKorea, italy, us){
               y=~cases,
               x=~date,
               name=countryName) %>%
-    layout(xaxis = list(title='Days since 100th case'),
+    layout(xaxis = list(title= paste('Days since, ', nCases,'th case', sep='')),
            yaxis = list(title='log(cases)', type='log')
     ) 
 }
