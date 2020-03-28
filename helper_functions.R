@@ -5,7 +5,7 @@ filter_country = function(country,df){
   df_filter  = data.frame('date' = colnames(df_filter)[5:ncol(df_filter)],
                           'cases' = colSums(df_filter[,-c(1:4)]),
                           row.names = NULL)
-  df_filter$date = mdy(df_filter$date)
+  df_filter$date = as.Date(df_filter$date, '%m/%d/%y')
   
   return(df_filter)
 }
@@ -65,13 +65,13 @@ combine_latlong = function(df){
 #combine jhu and mohfw data
 combine_jhu_mohfw_data = function(indiadf, df){
   tempdf1 = filter_country('India', df)
-  tempdf1 = tempdf1[1:which(tempdf1$date == ymd('2020-03-21')), ]
+  tempdf1 = tempdf1[1:which(tempdf1$date == as.Date('2020-03-21', '%Y-%m-%d')), ]
   indiadf = indiadf %>% mutate_at(vars(4:ncol(indiadf)), as.numeric)
   tempdf = data.frame('date' = colnames(indiadf)[4:ncol(indiadf)],
                       'cases' = colSums(indiadf[, -c(1:3)], na.rm=T),
                       row.names = NULL)
-  tempdf$date = dmy(tempdf$date)
-  
+  #tempdf$date = dmy(tempdf$date)
+  tempdf$date = as.Date(tempdf$date, '%d.%m.%Y')
   tempdf1 = rbind.data.frame(tempdf1, tempdf)
   
   rm(tempdf)
@@ -101,6 +101,40 @@ plot_trendPlot = function(df_confirmed, df_recovered, df_deaths){
               mode='lines+markers',
               line = list(color='red'),
               marker = list(color='red'))
+}
+
+daily_df = function(df){
+  df = df %>% filter(cases>0)
+  if(nrow(df)==0){
+    return(df)
+  }else{
+    df = df %>% mutate(diff = cases-lag(cases))
+    return(df)
+  }
+}
+
+plot_daily = function(df, yaxislabel){
+  plot_ly(data=df,
+          x=~date,
+          y=~diff,
+          type='bar') %>%
+    layout(xaxis=list(title='Date'),
+           yaxis=list(title=paste('No. of ', yaxislabel, sep='')))
+}
+
+plot_compare_daily = function(dfA, dfB, countryA, countryB, yaxislabel){
+  plot_ly(data=dfA,
+          x=~date,
+          y=~diff,
+          name=countryA,
+          type='bar') %>%
+    add_trace(data=dfB,
+              x=~date,
+              y=~diff,
+              name=countryB) %>%
+    layout(xaxis=list(title='Date'),
+           yaxis=list(title=paste('No of', yaxislabel)),
+           barmode='group')
 }
 
 plot_valuebox_confirmed = function(df){

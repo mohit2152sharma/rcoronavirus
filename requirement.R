@@ -11,7 +11,6 @@ if(length(new.packages)){
 }
 
 library(tidyverse)
-library(lubridate)
 library(shinydashboard)
 library(plotly)
 library(shiny)

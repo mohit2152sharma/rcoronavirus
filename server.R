@@ -18,6 +18,42 @@ server <- function(input, output) {
 
   })
   
+  ##daily cases
+  output$countryDailyNewCases = renderPlotly({
+    
+    if(input$country != 'India'){
+      df=daily_df(filter_country(input$country, confirmed))
+      validate(
+        need(nrow(df)>0, paste(input$country,'has not registered a case yet'))
+      )
+      
+      plot_daily(df=df,
+                 yaxislabel='New Cases')
+
+    }else{
+      plot_daily(df=indiaCombineConfirmed,
+                 yaxislabel='New Cases')
+    }
+  })
+  
+  ##daily deaths
+  output$countryDailyDeaths = renderPlotly({
+    if(input$country != 'India'){
+      df=daily_df(filter_country(input$country, deaths))
+      validate(
+        need(nrow(df>0), paste(input$country, 'has no deaths'))
+      )
+      plot_daily(df=df,
+                 yaxislabel='Deaths')
+      
+    }else{
+      
+      plot_daily(df=indiaCombineDeaths,
+                 yaxislabel='Deaths')
+      
+    }
+  })
+  
   ##total number of confirmed cases
   output$confirmedTotal = renderValueBox({
     
@@ -119,6 +155,58 @@ server <- function(input, output) {
                  countryB = input$compareCountryB)
   })
   
+  ##compareTab daily new cases
+  output$compareDailyNewCases = renderPlotly({
+    if(input$compareCountryA == 'India' && input$compareCountryB != 'India'){
+      dfA = indiaCombineConfirmed
+      dfB = filter_country(input$compareCountryB, confirmed)
+    }else if(input$compareCountryA != 'India' && input$compareCountryB == 'India' ){
+      dfB = indiaCombineConfirmed
+      dfA = filter_country(input$compareCountryA, confirmed)
+    }else if(input$compareCountryA == 'India' && input$compareCountryB == 'India'){
+      dfA = indiaCombineConfirmed
+      dfB = indiaCombineConfirmed
+    }else{
+      dfA = filter_country(input$compareCountryA, confirmed)
+      dfB = filter_country(input$compareCountryB, confirmed)
+    }
+    
+    dfA=daily_df(dfA)
+    dfB=daily_df(dfB)
+    
+    plot_compare_daily(dfA=dfA,
+                       dfB=dfB,
+                       countryA=input$compareCountryA,
+                       countryB=input$compareCountryB,
+                       yaxislabel='New Cases')
+  })
+  
+  ##compareTab daily new deaths
+  output$compareDailyNewDeaths = renderPlotly({
+    if(input$compareCountryA == 'India' && input$compareCountryB != 'India'){
+      dfA = indiaCombineDeaths
+      dfB = filter_country(input$compareCountryB, deaths)
+    }else if(input$compareCountryA != 'India' && input$compareCountryB == 'India' ){
+      dfB = indiaCombineDeaths
+      dfA = filter_country(input$compareCountryA, deaths)
+    }else if(input$compareCountryA == 'India' && input$compareCountryB == 'India'){
+      dfA = indiaCombineDeaths
+      dfB = indiaCombineDeaths
+    }else{
+      dfA = filter_country(input$compareCountryA, deaths)
+      dfB = filter_country(input$compareCountryB, deaths)
+    }
+    
+    dfA=daily_df(dfA)
+    dfB=daily_df(dfB)
+    
+    plot_compare_daily(dfA=dfA,
+                       dfB=dfB,
+                       countryA=input$compareCountryA,
+                       countryB=input$compareCountryB,
+                       yaxislabel='Deaths')
+  })
+  
   #india tab
   ##map
   output$indiaMap = renderLeaflet({
@@ -138,14 +226,8 @@ server <- function(input, output) {
   
   ##new cases
   output$indiaDailyNewCases = renderPlotly({
-    df = indiaCombineConfirmed %>%  filter(cases > 0) %>% mutate(diff=cases - lag(cases))
-    
-    plot_ly(data=df,
-            x=~date,
-            y=~diff,
-            type='bar') %>%
-      layout(xaxis=list(title='Date'),
-             yaxis=list(title='No. of new cases'))
+    df = daily_df(indiaCombineConfirmed)
+    plot_daily(df, yaxislabel='New Cases')
   })
   
   ##stateheatmap
@@ -154,7 +236,8 @@ server <- function(input, output) {
     df = indiaConfirmed %>% 
       pivot_longer(-c(States, Latitude, Longitude), names_to='date', values_to='cases')
     
-    df$date = dmy(df$date)
+    #df$date = dmy(df$date)
+    df$date = as.Date(df$date, '%d.%m.%Y')
     df[is.na(df$cases), 'cases'] = 0
     
     gg = ggplot(df, aes(x=date, y=States)) +
@@ -202,4 +285,5 @@ server <- function(input, output) {
                       nCases=nCases)
     }
   })
+  
 }

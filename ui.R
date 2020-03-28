@@ -111,11 +111,20 @@ dashboardBody = dashboardBody(
     tabItem(
       tabName = 'tabCountry',
       fluidRow(
-        box(
-          title='Number of Cases',
-          solidHeader = TRUE,
-          status='primary',
-          plotlyOutput('trendPlot', height = "400px", width = "900px"),
+        tabBox(
+          title='Country',
+          tabPanel(
+            'Cumulative',
+            plotlyOutput('trendPlot')
+          ),
+          tabPanel(
+            'Daily New Cases',
+            plotlyOutput('countryDailyNewCases')
+          ),
+          tabPanel(
+            'Daily Deaths',
+            plotlyOutput('countryDailyDeaths')
+          ),
           width=12
         )
       ),
@@ -143,6 +152,14 @@ dashboardBody = dashboardBody(
           tabPanel(
             'Deaths',
             plotlyOutput('compareDeaths')
+          ),
+          tabPanel(
+            'Daily New Cases',
+            plotlyOutput('compareDailyNewCases')
+          ),
+          tabPanel(
+            'Daily New Deaths',
+            plotlyOutput('compareDailyNewDeaths')
           ),
           width=12
         )
