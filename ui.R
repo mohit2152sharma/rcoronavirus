@@ -60,7 +60,7 @@ dashboardSideBar = dashboardSidebar(
         selectInput(
           inputId='compareCountryB',
           choices=countries,
-          selected='China',
+          selected='US',
           label='Select Country B'
         )
       ),
@@ -221,6 +221,9 @@ dashboardBody = dashboardBody(
           strong('Data Update', style='font-size:20px;'),
           tags$li(
             'The data is updated daily at around 6 pm IST, including from both the data sources as listed above'
+          ),
+          tags$li(
+            "Due to technical error data for 29th March wasn't updated"
           ),
           br(),
           strong('Collaborate', style='font-size:20px;'),

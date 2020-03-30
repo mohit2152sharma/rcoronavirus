@@ -29,8 +29,8 @@ state_data = function(url){
   nodeLength = length(nodes)
   stateData = nodes[nodeLength] %>% html_children() %>% html_table()
   stateData = as.data.frame(stateData)
-  colnames(stateData) = c('s.no','state', 'confirmedCasesIndia', 'confirmedCasesForeign', 'recovered', 'deaths')
-  stateData$totalConfirmedCases = as.numeric(stateData[,3]) + as.numeric(stateData[,4])
+  colnames(stateData) = c('s.no','state', 'totalConfirmedCases', 'recovered', 'deaths')
+  #stateData$totalConfirmedCases = as.numeric(stateData[,3]) + as.numeric(stateData[,4])
   stateData$`s.no` = NULL
   return(stateData)
 }
@@ -38,7 +38,7 @@ state_data = function(url){
 ##get update data for india data from url
 update_date = function(url){
   updateDate = read_html(url) %>% html_nodes('p') %>% html_text()
-  updateDate = str_extract(updateDate[which(str_detect(updateDate, '.\\*including foreign nationals\\.*'))], '\\.*(\\d{2}.\\d{2}.\\d{4})\\.*')
+  updateDate = str_extract(updateDate[which(str_detect(updateDate, '\\.*Including \\d+ foreign Nationals\\.*'))], '\\.*(\\d{2}.\\d{2}.\\d{4})\\.*')
   
   return(updateDate)
 }

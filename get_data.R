@@ -23,9 +23,9 @@ stateData = state_data('https://www.mohfw.gov.in/')
 updateDate = update_date('https://www.mohfw.gov.in/')
 
 ##add time series data to india csv file
-add_date_data_india('./data/india/indiaTimeSeries/indiaConfirmed.csv', stateData[, c(1,6)], updateDate)
-add_date_data_india('./data/india/indiaTimeSeries/indiaRecovered.csv', stateData[, c(1,4)], updateDate)
-add_date_data_india('./data/india/indiaTimeSeries/indiaDeaths.csv', stateData[, c(1,5)], updateDate)
+add_date_data_india('./data/india/indiaTimeSeries/indiaConfirmed.csv', stateData[, c(1, which(colnames(stateData) == 'totalConfirmedCases'))], updateDate)
+add_date_data_india('./data/india/indiaTimeSeries/indiaRecovered.csv', stateData[, c(1,which(colnames(stateData) == 'recovered'))], updateDate)
+add_date_data_india('./data/india/indiaTimeSeries/indiaDeaths.csv', stateData[, c(1,which(colnames(stateData) == 'deaths'))], updateDate)
 
 stateData = combine_latlong(stateData)
 write_csv(stateData, paste('./data/india/indiaDailyReports/',updateDate,'.csv', sep=''))
