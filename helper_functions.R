@@ -37,9 +37,7 @@ state_data = function(url){
 
 ##get update data for india data from url
 update_date = function(url){
-  updateDate = read_html(url) %>% html_nodes('p') %>% html_text()
-  updateDate = str_extract(updateDate[which(str_detect(updateDate, '\\.*Including \\d+ foreign Nationals\\.*'))], '\\.*(\\d{2}.\\d{2}.\\d{4})\\.*')
-  
+  updateDate = strftime(Sys.Date(), '%d.%m.%Y')
   return(updateDate)
 }
 

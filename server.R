@@ -220,7 +220,7 @@ server <- function(input, output) {
     leaflet(df) %>% 
       setView(lng=78.9629, lat=20.5937, zoom=4) %>% 
       addTiles() %>% 
-      addCircleMarkers(lng=~Longitude, lat=~Latitude, radius=~cases/5, color='red', fillOpacity=0.8 , label=~label)
+      addCircleMarkers(lng=~Longitude, lat=~Latitude, radius=~cases/10, color='red', fillOpacity=0.8 , label=~label)
     
   })
   
@@ -254,7 +254,6 @@ server <- function(input, output) {
     southKorea = traj_df('Korea, South', confirmed, nCases)
     italy = traj_df('Italy', confirmed, nCases)
     us = traj_df('US', confirmed, nCases)
-    
     
     if(input$trajecotryCountry != 'India'){
       
