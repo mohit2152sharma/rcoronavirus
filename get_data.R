@@ -20,7 +20,7 @@ save_file(url_filename)
 #adding india state data
 stateData = state_data('https://www.mohfw.gov.in/')
 ##extract update date from url
-updateDate = update_date('https://www.mohfw.gov.in/')
+updateDate = update_date()
 
 ##add time series data to india csv file
 add_date_data_india('./data/india/indiaTimeSeries/indiaConfirmed.csv', stateData[, c(1, which(colnames(stateData) == 'totalConfirmedCases'))], updateDate)
@@ -32,3 +32,6 @@ write_csv(stateData, paste('./data/india/indiaDailyReports/',updateDate,'.csv', 
 
 #record data update time
 write.table(paste(Sys.time(), 'IST', sep=' '), './data/dataUpdateTime.txt', row.names=F, col.names=F)
+
+
+print('Data update successful!!!')

@@ -36,7 +36,7 @@ state_data = function(url){
 }
 
 ##get update data for india data from url
-update_date = function(url){
+update_date = function(){
   updateDate = strftime(Sys.Date(), '%d.%m.%Y')
   return(updateDate)
 }
