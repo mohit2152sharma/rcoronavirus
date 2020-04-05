@@ -31,8 +31,10 @@ server <- function(input, output) {
                  yaxislabel='New Cases')
 
     }else{
-      plot_daily(df=indiaCombineConfirmed,
-                 yaxislabel='New Cases')
+      
+      df = daily_df(indiaCombineConfirmed)
+      plot_daily(df, yaxislabel='New Cases')
+      
     }
   })
   
@@ -48,7 +50,8 @@ server <- function(input, output) {
       
     }else{
       
-      plot_daily(df=indiaCombineDeaths,
+      df = daily_df(indiaCombineDeaths)
+      plot_daily(df=df,
                  yaxislabel='Deaths')
       
     }
