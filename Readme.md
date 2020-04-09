@@ -9,4 +9,4 @@ This is the project repository of coronavirus country tracker dashboard.
 
   1. The data is downloaded from [Jhon Hopkins Coronavirus data repository](https://github.com/CSSEGISandData/COVID-19) and Ministry of Health and Family welfare, Govt of India site.
 
-  2. The data gets updated daily at 6:30 a.m. UTC.
+  2. The data gets updated.
