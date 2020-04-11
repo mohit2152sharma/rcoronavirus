@@ -249,7 +249,6 @@ server <- function(input, output) {
     gg = ggplotly(gg)
   })
   
-  
   #trajectory tab
   output$trajectory = renderPlotly({
     
