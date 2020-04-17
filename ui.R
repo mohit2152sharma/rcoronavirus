@@ -4,6 +4,7 @@ source('helper_functions.R')
 source('data_wrangle.R')
 
 countries = sort(unique(confirmed$`Country/Region`), decreasing=FALSE)
+states = sort(unique(indiaConfirmed$States), decreasing=FALSE)
 
 convertMenuItem <- function(mi,tabName) {
   mi$children[[1]]$attribs['data-toggle']="tab"
@@ -49,7 +50,7 @@ dashboardSideBar = dashboardSidebar(
     ),
     convertMenuItem(
       menuItem(
-        text='Compare',
+        text='Compare Countries',
         tabName='tabCompareCountry',
         selectInput(
           inputId='compareCountryA',
@@ -65,13 +66,6 @@ dashboardSideBar = dashboardSidebar(
         )
       ),
       tabName='tabCompareCountry'
-    ),
-    convertMenuItem(
-      menuItem(
-        text='India',
-        tabName='india'
-      ),
-      tabName='india'
     ),
     convertMenuItem(
       menuItem(
@@ -91,6 +85,39 @@ dashboardSideBar = dashboardSidebar(
         )
       ),
       tabName='trajectory'
+    ),
+    convertMenuItem(
+      menuItem(
+        text='India',
+        tabName='india'
+      ),
+      tabName='india'
+    ),
+    convertMenuItem(
+      menuItem(
+        text = 'Compare India States',
+        tabName = 'compareIndiaStates',
+        selectInput(
+          inputId = 'compareIndiaStatesA',
+          choices = states,
+          selected = 'Kerala',
+          label = 'Select State A'
+        ),
+        selectInput(
+          inputId = 'compareIndiaStatesB',
+          choices = states,
+          selected = 'Delhi',
+          label = 'Select State B'
+        )
+      ),
+      tabName = 'compareIndiaStates'
+    ),
+    convertMenuItem(
+      menuItem(
+        text = 'India States',
+        tabName = 'indiaStates'
+      ),
+      tabName = 'indiaStates'
     ),
     convertMenuItem(
       menuItem(
@@ -180,11 +207,43 @@ dashboardBody = dashboardBody(
             'Daily New Cases',
             plotlyOutput('indiaDailyNewCases')
           ),
+          width=12
+        )
+      )
+    ),
+    
+    #compare Indian states tab
+    tabItem(
+      tabName='compareIndiaStates',
+      fluidRow(
+        tabBox(
+          title='Compare States',
           tabPanel(
-            'States New Cases',
-            plotlyOutput('indiaStateHeatMap')
+            'Confirmed Cases',
+            plotlyOutput('compareStatesConfirm')
+          ),
+          tabPanel(
+            'Recovered Cases',
+            plotlyOutput('compareStatesRecover')
+          ),
+          tabPanel(
+            'Deaths',
+            plotlyOutput('compareStatesDeath')
           ),
           width=12
+        )
+      )
+    ),
+    
+    #indian states lineplot
+    tabItem(
+      tabName = 'indiaStates',
+      fluidRow(
+        box(
+          title = 'India States',
+          solidHeader = TRUE,
+          plotlyOutput('statesLinePlot'),
+          width = 12
         )
       )
     ),
@@ -220,10 +279,10 @@ dashboardBody = dashboardBody(
           br(),
           strong('Data Update', style='font-size:20px;'),
           tags$li(
-            'The data is updated daily at around 6 pm IST, including from both the data sources as listed above'
+            'The data is updated daily at around 4pm and 8pm IST, including from both the data sources as listed above'
           ),
           tags$li(
-            "Due to technical error data for 29th March wasn't updated"
+            "The indian states data is recorded after april 1st only"
           ),
           br(),
           strong('Collaborate', style='font-size:20px;'),

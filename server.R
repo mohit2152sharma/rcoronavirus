@@ -223,32 +223,27 @@ server <- function(input, output) {
     leaflet(df) %>% 
       setView(lng=78.9629, lat=20.5937, zoom=4) %>% 
       addTiles() %>% 
-      addCircleMarkers(lng=~Longitude, lat=~Latitude, radius=~cases/50, color='red', fillOpacity=0.8 , label=~label)
+      addCircleMarkers(lng=~Longitude, lat=~Latitude, radius=~cases/200, color='red', fillOpacity=0.8 , label=~label)
     
   })
   
   ##new cases
   output$indiaDailyNewCases = renderPlotly({
     df = daily_df(indiaCombineConfirmed)
-    plot_daily(df, yaxislabel='New Cases')
+    plot_daily(df, yaxislabel='New Cases') %>%
+      layout(annotations = list(x = 1, 
+                                y = -0.15, 
+                                text = '*Due to technical error, data of 29th March and 31st March was not recorded', 
+                                showarrow = F, 
+                                xref='paper', 
+                                yref='paper', 
+                                xanchor='right', 
+                                yanchor='auto', 
+                                xshift=0, 
+                                yshift=0,
+                                font=list(size=9, color="red")))
   })
-  
-  ##stateheatmap
-  output$indiaStateHeatMap = renderPlotly({
-    
-    df = indiaConfirmed %>% 
-      pivot_longer(-c(States, Latitude, Longitude), names_to='date', values_to='cases')
-    
-    #df$date = dmy(df$date)
-    df$date = as.Date(df$date, '%d.%m.%Y')
-    df[is.na(df$cases), 'cases'] = 0
-    
-    gg = ggplot(df, aes(x=date, y=States)) +
-      geom_tile(aes(fill=cases), color='grey') +
-      scale_fill_gradient(low='white', high='red')
-    gg = ggplotly(gg)
-  })
-  
+
   #trajectory tab
   output$trajectory = renderPlotly({
     
@@ -287,4 +282,104 @@ server <- function(input, output) {
     }
   })
   
+  #compare Indian states tab
+  output$compareStatesConfirm = renderPlotly({
+    stateA = input$compareIndiaStatesA
+    stateB = input$compareIndiaStatesB
+    
+    dfA = filter_state(stateA, indiaConfirmed)
+    dfB = filter_state(stateB, indiaConfirmed)
+    
+    plot_compare(dfA = dfA,
+                 countryA = stateA,
+                 dfB = dfB,
+                 countryB = stateB) %>%
+      layout(annotations = list(x = 1, 
+                                y = -0.15, 
+                                text = '*Data since April 1st, 2020', 
+                                showarrow = F, 
+                                xref='paper', 
+                                yref='paper', 
+                                xanchor='right', 
+                                yanchor='auto', 
+                                xshift=0, 
+                                yshift=0,
+                                font=list(size=9, color="red")))
+  })
+  
+  output$compareStatesRecover = renderPlotly({
+    stateA = input$compareIndiaStatesA
+    stateB = input$compareIndiaStatesB
+    
+    dfA = filter_state(stateA, indiaRecovered)
+    dfB = filter_state(stateB, indiaRecovered)
+    
+    plot_compare(dfA = dfA,
+                 countryA = stateA,
+                 dfB = dfB,
+                 countryB = stateB) %>%
+      layout(annotations = list(x = 1, 
+                                y = -0.15, 
+                                text = '*Data since April 1st, 2020', 
+                                showarrow = F, 
+                                xref='paper', 
+                                yref='paper', 
+                                xanchor='right', 
+                                yanchor='auto', 
+                                xshift=0, 
+                                yshift=0,
+                                font=list(size=9, color="red")))
+  })
+  
+  output$compareStatesDeath = renderPlotly({
+    stateA = input$compareIndiaStatesA
+    stateB = input$compareIndiaStatesB
+    
+    dfA = filter_state(stateA, indiaDeaths)
+    dfB = filter_state(stateB, indiaDeaths)
+    
+    plot_compare(dfA = dfA,
+                 countryA = stateA,
+                 dfB = dfB,
+                 countryB = stateB) %>%
+      layout(annotations = list(x = 1, 
+                                y = -0.15, 
+                                text = '*Data since April 1st, 2020', 
+                                showarrow = F, 
+                                xref='paper', 
+                                yref='paper', 
+                                xanchor='right', 
+                                yanchor='auto', 
+                                xshift=0, 
+                                yshift=0,
+                                font=list(size=9, color="red")))
+  })
+  
+  
+  #india state plot
+  output$statesLinePlot = renderPlotly({
+    df = indiaConfirmed %>%
+      pivot_longer(-c(States, Latitude, Longitude), names_to = 'date', values_to = 'cases')
+    
+    df$date = as.Date(df$date, '%d.%m.%Y')
+    df = df[which(df$date > as.Date('01.04.2020', '%d.%m.%Y')), ]
+    
+    plot_ly(df,
+            x = ~date,
+            y = ~cases,
+            color = ~as.factor(States),
+            type = 'scatter',
+            mode = 'lines+markers') %>%
+      layout(annotations = list(x = 1, 
+                                y = -0.15, 
+                                text = '*Data since April 1st, 2020', 
+                                showarrow = F, 
+                                xref='paper', 
+                                yref='paper', 
+                                xanchor='right', 
+                                yanchor='auto', 
+                                xshift=0, 
+                                yshift=0,
+                                font=list(size=9, color="red")))
+  })
 }

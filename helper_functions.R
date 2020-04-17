@@ -205,3 +205,15 @@ plot_trajectory = function(dfSelected, countryName, southKorea, italy, us, nCase
            yaxis = list(title='log(cases)', type='log')
     ) 
 }
+
+#filter india state
+filter_state = function(state,df){
+  df_filter = df %>% filter(States == state) 
+  df_filter  = data.frame('date' = colnames(df_filter)[12:ncol(df_filter)],
+                          'cases' = colSums(df_filter[,-c(1:11)]),
+                          row.names = NULL)
+  df_filter$date = as.Date(df_filter$date, '%d.%m.%y')
+  
+  return(df_filter)
+}
+
