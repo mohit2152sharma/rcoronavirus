@@ -1,3 +1,5 @@
+# Daily data updates have been stopped
+
 # Covid-19 Coronavirus Country Tracker
 
 This is the project repository of coronavirus country tracker dashboard.
