@@ -290,7 +290,7 @@ dashboardBody = dashboardBody(
             a('Project on github', href='https://github.com/mohit2152sharma/rcoronavirus')
           ),
           tags$li(
-            'For suggestions and collaboration: mohitlakshya@gmail.com'
+            'The daily data updates have been stopped, since 14 June 2020'
           ),
           br(),
           strong('Developed By', style='font-size:20px;'),
