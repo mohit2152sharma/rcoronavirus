@@ -10,5 +10,3 @@ This is the project repository of coronavirus country tracker dashboard.
 ### Data Sources
 
   1. The data is downloaded from [Jhon Hopkins Coronavirus data repository](https://github.com/CSSEGISandData/COVID-19) and Ministry of Health and Family welfare, Govt of India site.
-
-  2. The data gets updated.
